@@ -1,0 +1,113 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>PacketSDK</name>
+    </assembly>
+    <members>
+        <member name="T:PacketSDKAPI.packet_status_t">
+            <summary>  
+             Status of Packet SDK 
+            </summary>  
+        </member>
+        <member name="F:PacketSDKAPI.packet_status_t.PACKET_SUCCESS">
+            <summary>  
+             Operation successful.
+            </summary>  
+        </member>
+        <member name="F:PacketSDKAPI.packet_status_t.PACKET_CALLBACK_SETSUCCESS">
+            <summary>  
+             Callback setting successful.
+            </summary>  
+        </member>
+        <member name="F:PacketSDKAPI.packet_status_t.PACKET_APPKEY_UNSET">
+            <summary>  
+             Application key not set.
+            </summary>  
+        </member>
+        <member name="F:PacketSDKAPI.packet_status_t.PACKET_APPKEY_INVALID">
+            <summary>  
+             Invalid application key.
+            </summary>  
+        </member>
+        <member name="F:PacketSDKAPI.packet_status_t.PACKET_APPKEY_DUPLICATESETTING">
+            <summary>  
+             Application key duplicate setting.
+            </summary>  
+        </member>
+        <member name="F:PacketSDKAPI.packet_status_t.PACKET_SDK_NOT_RUNNING">
+            <summary>  
+             The Packet SDK is currently not in a startup state.
+            </summary>  
+        </member>
+        <member name="F:PacketSDKAPI.packet_status_t.PACKET_SDK_RUNNING">
+            <summary>  
+             Packet SDK is already in startup state.
+            </summary>  
+        </member>
+        <member name="F:PacketSDKAPI.packet_status_t.PACKET_SDK_SERVER_OBTAINED">
+            <summary>  
+             Server information obtained.
+            </summary>  
+        </member>
+        <member name="F:PacketSDKAPI.packet_status_t.PACKET_SDK_SERVER_CONNECTED">
+            <summary>  
+             Connection has been established with the server.
+            </summary>  
+        </member>
+        <member name="F:PacketSDKAPI.packet_status_t.PACKET_SDK_SERVER_CERTIFIED">
+            <summary>  
+             Certification successful.
+            </summary>  
+        </member>
+        <member name="F:PacketSDKAPI.packet_status_t.PACKET_SDK_SERVER_DISCONNECTED">
+            <summary>  
+             Disconnect from server.
+            </summary>  
+        </member>
+        <member name="T:PacketSDKAPI.CallBackDelegate">
+            <summary>  
+             PacketSDK callback 
+            </summary>  
+        </member>
+        <member name="T:PacketSDKAPI.PacketSDK">
+            <summary>  
+             PacketSDK API
+            </summary>  
+        </member>
+        <member name="M:PacketSDKAPI.PacketSDK.SetAppKey(System.String)">
+            <summary>  
+             Set application key for Packet SDK.
+            </summary>  
+        </member>
+        <member name="M:PacketSDKAPI.PacketSDK.Start">
+            <summary>  
+             Start Packet SDK.
+            </summary>  
+        </member>
+        <member name="M:PacketSDKAPI.PacketSDK.Stop">
+            <summary>  
+            Stop Packet SDK.  
+            </summary>  
+        </member>
+        <member name="M:PacketSDKAPI.PacketSDK.SetCallBack(PacketSDKAPI.CallBackDelegate)">
+            <summary>  
+            Set callback function to receive Packet SDK status.
+            </summary>  
+        </member>
+        <member name="M:PacketSDKAPI.PacketSDK.UnSetCallBack">
+            <summary>  
+            Cancel callback.
+            </summary>  
+        </member>
+        <member name="M:PacketSDKAPI.PacketSDK.QueryServerStatus">
+            <summary>  
+            Querying the current status.
+            </summary>  
+        </member>
+        <member name="M:PacketSDKAPI.PacketSDK.StatusToString(PacketSDKAPI.packet_status_t)">
+            <summary>  
+            Convert status to readable strings.
+            </summary>  
+        </member>
+    </members>
+</doc>
