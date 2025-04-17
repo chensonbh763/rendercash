@@ -1,10 +1,5 @@
 import ctypes
 from ctypes import c_int, CFUNCTYPE
-from kivy.app import App
-from kivy.uix.label import Label
-from kivy.uix.boxlayout import BoxLayout
-from kivy.uix.button import Button
-from kivy.clock import Clock
 
 # ********************************** SDK Integration **********************************
 dll = ctypes.CDLL(r'C:/Users/j/OneDrive/Desktop/códigos/rendercash/packet_sdk.dll')  # Caminho ajustado para o DLL
@@ -31,57 +26,39 @@ print(f"Result of set appkey: {result} Message: {resultStringPtr.decode('utf-8')
 result = dll.packet_sdk_start()
 print("PacketSDK started! Result:", result)
 
-# ********************************** Kivy UI **********************************
-class RenderCashApp(App):
-    def build(self):
-        layout = BoxLayout(orientation='vertical', padding=10, spacing=10)
+# ********************************** Funções de Monitoramento **********************************
+def atualizar_dados():
+    try:
+        # Consultando o status do servidor via SDK
+        server_status = dll.packet_sdk_queryServerStatus()
+        status_message = dll.packet_strstatus(server_status)
+        print(f"Status do SDK: {status_message.decode('utf-8')}")
 
-        # Logs dos eventos
-        self.logs_label = Label(text="Logs do SDK:")
-        self.status_label = Label(text="Status do SDK: Inicializando...")
-        self.ganhos_label = Label(text="Ganhos: Consultando...")
-        self.uso_banda_label = Label(text="Uso de Banda: Consultando...")
+        # Simular ganhos e uso de banda
+        earnings = 20.0
+        bandwidth_usage = 150
+        print(f"Ganhos: ${earnings:.2f}")
+        print(f"Uso de Banda: {bandwidth_usage} MB")
+    except Exception as e:
+        print(f"Erro ao consultar SDK: {e}")
 
-        atualizar_btn = Button(text="Atualizar Dados")
-        atualizar_btn.bind(on_press=self.atualizar_dados)
-
-        finalizar_btn = Button(text="Parar SDK")
-        finalizar_btn.bind(on_press=self.finalizar_sdk)
-
-        layout.add_widget(self.logs_label)
-        layout.add_widget(self.status_label)
-        layout.add_widget(self.ganhos_label)
-        layout.add_widget(self.uso_banda_label)
-        layout.add_widget(atualizar_btn)
-        layout.add_widget(finalizar_btn)
-
-        Clock.schedule_interval(self.atualizar_dados, 5)
-        return layout
-
-    def atualizar_dados(self, instance=None):
-        try:
-            server_status = dll.packet_sdk_queryServerStatus()
-            status_message = dll.packet_strstatus(server_status)
-
-            self.status_label.text = f"Status do SDK: {status_message.decode('utf-8')}"
-            self.logs_label.text = f"Logs do SDK: {status_message.decode('utf-8')}"
-
-            # Simular ganhos e banda até funções reais serem identificadas
-            earnings = 20.0
-            bandwidth_usage = 150
-
-            self.ganhos_label.text = f"Ganhos: ${earnings:.2f}"
-            self.uso_banda_label.text = f"Uso de Banda: {bandwidth_usage} MB"
-        except Exception as e:
-            print(f"Erro ao consultar SDK: {e}")
-            self.logs_label.text = "Logs do SDK: Erro ao atualizar"
-
-    def finalizar_sdk(self, instance):
+def finalizar_sdk():
+    try:
+        # Parar o SDK
         result = dll.packet_sdk_stop()
         stop_message = dll.packet_strstatus(result)
-        self.status_label.text = f"Status do SDK: {stop_message.decode('utf-8')}"
-        self.logs_label.text = "Logs do SDK: Conexão finalizada."
-        print("PacketSDK finalizado!")
+        print(f"PacketSDK finalizado! Status: {stop_message.decode('utf-8')}")
+    except Exception as e:
+        print(f"Erro ao finalizar SDK: {e}")
 
+# ********************************** Execução do Sistema **********************************
 if __name__ == "__main__":
-    RenderCashApp().run()
+    try:
+        print("Atualizando dados do SDK a cada 5 segundos...")
+        while True:
+            atualizar_dados()
+            import time
+            time.sleep(5)  # Atualiza a cada 5 segundos
+    except KeyboardInterrupt:
+        print("\nEncerrando monitoramento...")
+        finalizar_sdk()
