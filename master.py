@@ -6,6 +6,7 @@ scripts = [
     "honeygain.py",
     "kryptex_miner.py",
     "rendercash.py",
+    "free.py",
 ]
 
 # Caminho absoluto opcional se estiver rodando em servidor tipo Render.com
