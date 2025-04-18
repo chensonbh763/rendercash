@@ -1,30 +1,53 @@
 import ctypes
 from ctypes import c_int, CFUNCTYPE
+import os
+import time
 
 # ********************************** SDK Integration **********************************
-dll = ctypes.CDLL(r'C:/Users/j/OneDrive/Desktop/códigos/rendercash/packet_sdk.dll')  # Caminho ajustado para o DLL
+# Caminho ajustado para o arquivo DLL, utilizando caminho relativo
+dll_path = os.path.join(os.path.dirname(__file__), 'packet_sdk.dll')
 
+# Verifique se o arquivo DLL existe
+if not os.path.exists(dll_path):
+    raise FileNotFoundError(f"O arquivo DLL não foi encontrado no caminho especificado: {dll_path}")
+
+# Carrega o DLL
+dll = ctypes.CDLL(dll_path)
+
+# Define o tipo de retorno para as funções do DLL
 dll.packet_strstatus.restype = ctypes.c_char_p
 
 # Callback function to handle SDK async events
 def asyncCallback(status):
-    statusStringPtr = dll.packet_strstatus(status)
-    print(f"PacketSDK async callback with status: {status} Message: {statusStringPtr.decode('utf-8')}")
+    try:
+        statusStringPtr = dll.packet_strstatus(status)
+        print(f"PacketSDK async callback with status: {status} Message: {statusStringPtr.decode('utf-8')}")
+    except Exception as e:
+        print(f"Erro no callback: {e}")
 
 CALLBACK_TYPE = CFUNCTYPE(None, c_int)
 callback_func = CALLBACK_TYPE(asyncCallback)
 
-# Setting the callback function
-dll.packet_sdk_set_callBack(callback_func)
+# Configurando a função de callback
+try:
+    dll.packet_sdk_set_callBack(callback_func)
+except Exception as e:
+    print(f"Erro ao configurar o callback: {e}")
 
-# Setting the appkey for authentication
-result = dll.packet_sdk_set_appKey("pGF1vmwKr0F0dPIA".encode('utf-8'))
-resultStringPtr = dll.packet_strstatus(result)
-print(f"Result of set appkey: {result} Message: {resultStringPtr.decode('utf-8')}")
+# Definindo o appkey para autenticação
+try:
+    result = dll.packet_sdk_set_appKey("pGF1vmwKr0F0dPIA".encode('utf-8'))
+    resultStringPtr = dll.packet_strstatus(result)
+    print(f"Resultado da configuração do appkey: {result} Mensagem: {resultStringPtr.decode('utf-8')}")
+except Exception as e:
+    print(f"Erro ao configurar o appkey: {e}")
 
-# Starting the SDK
-result = dll.packet_sdk_start()
-print("PacketSDK started! Result:", result)
+# Iniciando o SDK
+try:
+    result = dll.packet_sdk_start()
+    print("PacketSDK iniciado! Resultado:", result)
+except Exception as e:
+    print(f"Erro ao iniciar o SDK: {e}")
 
 # ********************************** Funções de Monitoramento **********************************
 def atualizar_dados():
@@ -54,10 +77,9 @@ def finalizar_sdk():
 # ********************************** Execução do Sistema **********************************
 if __name__ == "__main__":
     try:
-        print("Atualizando dados do SDK a cada 5 segundos...")
+        print("Atualizando dados do SDK a cada 5 segundos... (Pressione Ctrl+C para encerrar)")
         while True:
             atualizar_dados()
-            import time
             time.sleep(5)  # Atualiza a cada 5 segundos
     except KeyboardInterrupt:
         print("\nEncerrando monitoramento...")
